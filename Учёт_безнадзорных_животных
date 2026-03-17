@@ -1,0 +1,164 @@
+#include <iostream>
+using namespace std;
+#include <string>
+
+class Animal
+{
+private:
+	string name; 
+	string type;
+	int age;
+	string status;
+public:
+	Animal()  // конструктор по умолчанию
+	{
+		name = "Без клички";
+		type = "Собака";
+		age = 0;
+		status = "В приюте";
+
+	}
+
+	Animal(string n_name, string t_type, int a_age, string s_status) // конструктор с параметрами
+	{
+		setName(n_name);;
+		setType(t_type);
+		setAge(a_age);
+		setStatus(s_status);
+
+	}
+
+	~Animal()  // деструктор
+	{
+		cout << "Объект " << name << " уничтожен" << endl;
+	}
+	// геттеры
+	string getName()
+	{
+		return name;
+	}
+
+	string getType()
+	{
+		return type;
+	}
+
+	int getAge()
+	{
+		return age;
+	}
+
+	string getStatus()
+	{
+		return status;
+	}
+
+	// сеттеры
+	void setName(string n)
+	{
+		if (n != "")
+			name = n;
+		else
+		{
+			cout << "Неккоректная кличка" << endl;
+			name = "Без клички";
+		}
+	}
+
+	void setType(string t)
+	{
+		if (t == "Собака" || t == "Кошка")
+			type = t;
+		else
+		{
+			cout << "Неккоректный тип животного" << endl;
+			type = "Собака";
+		}
+	}
+
+	void setAge(int a)
+	{
+		if (a >= 0)
+			age = a;
+		else
+		{
+			cout << "Неккоректный возраст" << endl;
+			age = 0;
+		}
+		
+	}
+
+	void setStatus(string s)
+	{
+		if (s == "В приюте" || s == "Пристроен")
+			status = s;
+		else
+		{
+			cout << "Неккоректный статус" << endl;
+			status = "В приюте";
+		}
+	}
+
+	//методы
+	void attachAnimal()
+	{
+		if (status == "В приюте")
+			status = "Пристроен";
+		else
+			cout << "Животное уже пристроено" << endl;
+	}
+
+	void yearsAnimal(int a)
+	{
+		if (a > 0)
+			age = age + a;
+		else
+			cout << "Некорректная прибавка возраста" << endl;
+	}
+
+	void printInfo()
+	{
+		cout << "Кличка животного: " << name << endl;
+		cout << "Тип животного: " << type << endl;
+		cout << "Возраст животного: " << age << endl;
+		cout << "Статус животного: " << status << endl;
+		cout << "////////////////////////////////////////" << endl << endl;
+
+	}
+
+};
+
+int main()
+{
+	setlocale(LC_ALL, "RU");
+
+	Animal animal1;
+
+	cout << "Текущая кличка животного 1: " << animal1.getName() << endl;
+	cout << "Текущий тип животного 1: " << animal1.getType() << endl;
+	cout << "Текущий возраст животного 1: " << animal1.getAge() << endl;
+	cout << "Текущий статус животного 1: " << animal1.getStatus() << endl;
+	cout << "----------------------------------------------------"<< endl;
+
+	animal1.setName("Шарик");
+	animal1.setAge(2);
+	animal1.attachAnimal();
+	animal1.yearsAnimal(1);
+	animal1.printInfo();
+
+
+	Animal animal2("Тоша", "Кролик", 3, "Пристроен");
+	cout << "Текущая кличка животного 2: " << animal2.getName() << endl;
+	cout << "Текущий тип животного 2: " << animal2.getType() << endl;
+	cout << "Текущий возраст животного 2: " << animal2.getAge() << endl;
+	cout << "Текущий статус животного 2: " << animal2.getStatus() << endl;
+	cout << "----------------------------------------------------" << endl;
+
+	animal2.yearsAnimal(-2);
+	animal2.attachAnimal();
+	animal2.setType("Кошка");
+	animal2.setStatus("В приюте");
+	animal2.printInfo();
+
+	return 0;
+}
