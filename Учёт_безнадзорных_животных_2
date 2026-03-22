@@ -1,0 +1,311 @@
+#include <iostream>
+using namespace std;
+#include <string>
+
+class Animal
+{
+protected:
+	string name;  //кличка
+	string type;  //тип
+	int age;  //возраст
+	string status;  //статус (в приюте/пристроен)
+public:
+
+	Animal(string n_name, string t_type, int a_age, string s_status) // конструктор с параметрами
+	{
+		setName(n_name);
+		setType(t_type);
+		setAge(a_age);
+		setStatus(s_status);
+	}
+
+	virtual ~Animal()  // виртуальный деструктор
+	{
+		cout << "Деструктор Animal для " << name << endl;
+	}
+	// геттеры
+	string getName()
+	{
+		return name;
+	}
+
+	string getType()
+	{
+		return type;
+	}
+
+	int getAge()
+	{
+		return age;
+	}
+
+	string getStatus()
+	{
+		return status;
+	}
+
+	// сеттеры
+	void setName(string n)
+	{
+		if (n != "")
+			name = n;
+		else
+		{
+			cout << "Неккоректная кличка" << endl;
+			name = "Без клички";
+		}
+	}
+
+	void setType(string t)
+	{
+		if (t == "Собака" || t == "Кошка")
+			type = t;
+		else
+		{
+			cout << "Неккоректный тип животного" << endl;
+			type = "Собака";
+		}
+	}
+
+	void setAge(int a)
+	{
+		if (a >= 0)
+			age = a;
+		else
+		{
+			cout << "Неккоректный возраст" << endl;
+			age = 0;
+		}
+	}
+
+	void setStatus(string s)  
+	{
+		if (s == "В приюте" || s == "Пристроен")
+			status = s;
+		else
+		{
+			cout << "Неккоректный статус" << endl;
+			status = "В приюте";
+		}
+	}
+
+	//обычные методы (для всех потомков, не переопределяемые)
+	void attachAnimal()  // приютить животное
+	{
+		if (status == "В приюте")
+			status = "Пристроен";
+		else
+			cout << "Животное уже пристроено" << endl;
+	}
+
+	void yearsAnimal(int a)  // прибавить возраст
+	{
+		if (a > 0)
+			age = age + a;
+		else
+			cout << "Некорректная прибавка возраста" << endl;
+	}
+
+	//виртуальные методы
+	virtual double calcFoodPerDay() = 0; //расчёт суточной нормы корма
+	virtual string getAdoptionInfo() = 0; //формирование информации для объявления о пристройстве
+	virtual void printInfo() //вывод информации 
+	{
+		cout << "Кличка животного: " << name << endl;
+		cout << "Тип животного: " << type << endl;
+		cout << "Возраст животного: " << age << endl;
+		cout << "Статус животного: " << status << endl;
+	}
+
+};
+class Dog : public Animal  //производный класс Dog
+{
+private:
+	string breed;  //порода
+	string size;  //размер (маленький/средний/крупный)
+
+public:
+	Dog(string n_name, int a_age, string s_status, string b_breed, string s_size) : Animal(n_name, "Собака", a_age, s_status)
+	{
+		setBreed(b_breed);
+		setSize(s_size);
+	}
+
+	~Dog() override //деструктор
+	{
+		cout << "Деструктор Dog для " << name << endl;
+	}
+
+	//геттеры
+	string getBreed()
+	{
+		return breed;
+	}
+	string getSize()
+	{
+		return size;
+	}
+
+	//сеттеры
+	void setBreed(string b)
+	{
+		if (b != "")
+			breed = b;
+		else
+		{
+			cout << "Неккоректная порода" << endl;
+			breed = "Без породы";
+		}
+	}
+	void setSize(string s)
+	{
+		if (s == "Маленький" || s == "Средний" || s == "Большой")
+			size = s;
+		else
+		{
+			cout << "Неккоректный размер" << endl;
+			size = "Маленький";
+		}
+	}
+
+	double calcFoodPerDay() override  //переопределение метода "расчёт суточной нормы корма"
+	{
+		if (size == "Маленький")
+			return 0.2;
+		else if (size == "Средний")
+			return 0.4;
+		else
+			return 0.7;
+	}
+	string getAdoptionInfo() override  //переопределение метода "формирование информации для объявления о пристройстве"
+	{
+		if (status == "В приюте")
+			return "Собака по кличке " + name + " ищет дом!\n" + "Порода: " + breed + "\n" + "Возраст: " + to_string(age) + "\n" + "Размер: " + size;
+		else
+			return "Собака по кличке " + name + " уже пристроена!\n" + "Порода: " + breed + "\n" + "Возраст: " + to_string(age) + "\n" + "Размер: " + size;
+	}
+	void printInfo() override  //переопределение метода "вывод информации "
+	{
+		Animal::printInfo();
+		cout << "Порода: " << breed << endl;
+		cout << "Размер: " << size << endl;
+		cout << "Суточная норма корма: " << calcFoodPerDay() << " кг" << endl;
+	}
+};
+
+class Cat : public Animal  //производный класс Cat
+{
+private:
+	string color;  //окрас
+	bool sterilization;  //признак стерилизации (true/false)
+public:
+	Cat(string n_name, int a_age, string s_status, string c_color, bool s_sterilization) : Animal(n_name, "Кошка", a_age, s_status)
+	{
+		setColor(c_color);
+		setSterilization(s_sterilization);
+	}
+
+	~Cat() override //деструктор
+	{
+		cout << "Деструктор Cat для " << name << endl;
+	}
+
+	//геттеры
+	string getColor()
+	{
+		return color;
+	}
+	string getSterilization()
+	{
+		if (sterilization)
+			return "Стерилизована";
+		else
+			return "Не стерилизована";
+	}
+
+	//сеттеры
+	void setColor(string c)
+	{
+		if (c != "")
+			color = c;
+		else
+		{
+			cout << "Некорректный цвет" << endl;
+			color = "Неизвестный";
+		}
+	}
+	void setSterilization(bool s)
+	{
+		sterilization = s;
+	}
+
+	double calcFoodPerDay() override  //переопределение метода "расчёт суточной нормы корма"
+	{
+		if (age < 2)
+			return 0.2;
+		else if (age >= 2 && age < 4)
+			return 0.4;
+		else
+			return 0.5;
+	}
+	string getAdoptionInfo() override  //переопределение метода "формирование информации для объявления о пристройстве"
+	{
+		if (status == "В приюте")
+			return "Кошка по кличке " + name + " ищет дом!\n" + "Окрас: " + color + "\n" + "Возраст: " + to_string(age) + "\n" + getSterilization();
+		else
+			return "Кошка по кличке " + name + " уже пристроена!\n" + "Окрас: " + color + "\n" + "Возраст: " + to_string(age) + "\n" + getSterilization();
+	}
+	void printInfo() override  //переопределение метода "вывод информации "
+	{
+		Animal::printInfo();
+		cout << "Окрас:  " << color << endl;
+		cout << "Признак стерилизации: " << getSterilization() << endl;
+		cout << "Суточная норма корма: " << calcFoodPerDay() << " кг" << endl;
+	}
+};
+
+int main()
+{
+	setlocale(LC_ALL, "RU");
+
+	Animal* animal[4];
+	animal[0] = new Dog("Микки", 2, "Пристроен", "Мальтезе", "Маленький");
+	animal[1] = new Cat("Тишка", 10, "Пристроен", "Серый", false);
+	animal[2] = new Cat("Мурка", 2, "В приюте", "Белый", true);
+	animal[3] = new Dog("Элька", 5, "В приюте", "Овчарка", "Большой");
+
+	cout << "\tВывод информации о всех животных" << endl << endl;  //вызов виртуального метода printInfo() для каждого элемента массива
+	for (int i = 0; i < 4; i++)
+	{
+		cout << "Информация о животном " << i + 1 << endl;
+		animal[i]->printInfo();
+		cout << endl;
+	}
+	cout << "----------------------------------------------------" << endl << endl;
+
+	cout << "\tИнформация для пристройства" << endl << endl;  //демонстрация полиморфизма
+	for (int i = 0; i < 4; i++)
+	{
+		cout << animal[i]->getAdoptionInfo() << endl << endl;
+	}
+	cout << "----------------------------------------------------" << endl << endl;
+
+	//изменение состояния животных (обычные методы базового класса)
+	animal[3]->attachAnimal();
+	animal[0]->yearsAnimal(1);
+	
+	cout << "\tОбновленная информация о всех животных" << endl << endl;  //обновленная информация
+	for (int i = 0; i < 4; i++)
+	{
+		animal[i]->printInfo();
+		cout << endl << endl;
+	}
+	cout << "----------------------------------------------------" << endl << endl;
+
+	for (int i = 0; i < 4; i++)  //освобождение памяти
+	{
+		delete animal[i];
+	}
+
+	return 0;
+}
